@@ -4,9 +4,12 @@
 #include <LiquidCrystal.h>
 #include "prox.h"
 #include "hub.h"
+#include "BlynkSimpleEsp32.h"
+
+WidgetMap myMap(V0); 
 float lat ,lon;
 TinyGPSPlus gps;
-String  lat_str = "75" , lng_str = "35";
+String  lat_str = "48.85756" , lng_str = "2.34280";
 #define RXD2 18
 #define TXD2 17
 float latitude = 75.0;
@@ -16,7 +19,7 @@ LiquidCrystal lcd(0, 4, 5, 22, 19, 21);
 Prox prox_sensor;
 Hub hub;
 char data[100];
-
+char auth[] = " d8JVu9muQYonDxIKe1tPNPlUa_BDrhz5";
 void setup() {
 prox_sensor.setup();
 hub.setup();
@@ -24,18 +27,21 @@ Serial.begin(115200); // connect serial
 Serial.println("The GPS Received Signal:"); 
 SerialGPS.begin(9600, SERIAL_8N1, RXD2, TXD2);
 lcd.begin(16, 2);
+ Blynk.begin(auth, hub.ssid, hub.password);
+ Blynk.virtualWrite(V0, "clr"); 
 }
 
 
 void loop() {
 
  prox_sensor.detectionAlert();
-  sprintf(data, "{\"lat\": \"%s\", \"lon\": \"%s\"}", lat_str, lng_str); 
-        hub.loop(data);
+  //sprintf(data, "{\"lat\": \"%s\", \"lon\": \"%s\"}", lat_str, lng_str); 
+        //hub.loop(data);
+        Serial.println(hub.getAdress(lat_str,lng_str));
  while (SerialGPS.available() > 0) {
    prox_sensor.detectionAlert();
-    sprintf(data, "{\"lat\": \"%s\", \"lon\": \"%s\"}", lat_str, lng_str); 
-        hub.loop(data);
+    //sprintf(data, "{\"lat\": \"%s\", \"lon\": \"%s\"}", lat_str, lng_str); 
+        //hub.loop(data);
     if (gps.encode(SerialGPS.read()))
     {
       if (gps.location.isValid())
@@ -45,22 +51,27 @@ void loop() {
         longitude = gps.location.lng();
         lng_str = String(longitude , 6);
          lcd.setCursor(0, 0);
-        lcd.print("Lat = ");
+       // lcd.print("Lat = ");
+        lcd.print(hub.getAdress(lat_str,lng_str));
+        //lcd.print(lat_str);
        
-        lcd.print(lat_str);
-       
-        lcd.setCursor(0,1);
-        lcd.print("Long = ");
-        lcd.print(lng_str);
+       // lcd.setCursor(0,1);
+       // lcd.print("Long = ");
+        //lcd.print(lng_str);
         sprintf(data, "{\"lat\": \"%s\", \"lon\": \"%s\"}", lat_str, lng_str); 
-        hub.loop(data);
+        
+        Blynk.virtualWrite(V0, 1, latitude, longitude, "Location");
       }
-      delay(1000);
-      lcd.clear();
+       lcd.setCursor(16,1);
+      lcd.autoscroll();    // Set diplay to scroll automatically
+      lcd.print(" ");      // set characters
+      delay(700);
+      //lcd.clear();
     }
      
  }
   
-       
+  Blynk.run();
+     
         
 }
