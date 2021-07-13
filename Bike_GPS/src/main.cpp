@@ -21,9 +21,10 @@ Hub hub;
 char data[100];
 char auth[] = " d8JVu9muQYonDxIKe1tPNPlUa_BDrhz5";
 void setup() {
+  Serial.begin(115200); 
 prox_sensor.setup();
 hub.setup();
-Serial.begin(115200); // connect serial 
+// connect serial 
 Serial.println("The GPS Received Signal:"); 
 SerialGPS.begin(9600, SERIAL_8N1, RXD2, TXD2);
 lcd.begin(16, 2);

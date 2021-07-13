@@ -1,13 +1,18 @@
 #include "hub.h"
 
 DynamicJsonDocument doc(2048);
-String address;
+
 
 void Hub::setup() {
-  
+   
   Serial.println("Starting connecting WiFi.");
+  int n = WiFi.scanNetworks();
+      for (int i = 0; i < n; ++i) {
+        Serial.println(WiFi.SSID(i));
+      }
+
   delay(10);
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid,password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -28,7 +33,7 @@ void Hub::setup() {
 String Hub::getAdress(String lat, String lng) {
  
    String request = "https://atlas.microsoft.com/search/address/reverse/json?subscription-key=Ltpn8KxW4omY2KFRQ9gDMq1KObgUM_LARJkHThNiF_k&api-version=1.0&query="+lat+","+lng;
-  /*Serial.println("start sending events.");
+ /*Serial.println("start sending events.");
   if (hasIoTHub)
   {
    
@@ -55,13 +60,16 @@ String Hub::getAdress(String lat, String lng) {
   //Response from server
   response = http.getString();
   //Parse JSON, read error if any
-  DeserializationError error = deserializeJson(doc, response);
+   deserializeJson(doc, response);
+  JsonObject address = doc["addresses"][0]["address"];
+  //Serial.println(response);
+  
   //Print parsed value on Serial Monitor
-  address = doc["street"].as<char*>();
+ String  street = address["street"];
   //Close connection  
   http.end();
   //Wait two seconds for next joke
-  return response;
+  return street;
 
 
 }
