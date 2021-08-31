@@ -34,9 +34,9 @@ void Hub::setup() {
 }
 
 
-String Hub::getAdress(String lat, String lng) { 
+String Hub::getAdress(String lng, String lat) { 
  
-   String request = "https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf6248195201672845469886f81046422ae9ef&point.lon="+lng+"&point.lat="+lat +"&size=0";
+   String request = "https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf6248195201672845469886f81046422ae9ef&point.lon=" +lng+"&point."+"lat="+lat + "&size=0";
  /*Serial.println("start sending events.")
   if (hasIoTHub)
   {
@@ -51,20 +51,20 @@ String Hub::getAdress(String lat, String lng) {
     }
     delay(5000);
   }*/
-   http.begin(request);
-  //Use HTTP GET request
-  http.GET();
-  //Response from server
-  response = http.getString();
+ 
+ 
   //Parse JSON, read error if any
   //Wait two seconds for next joke
    http.begin(request);
   //Use HTTP GET request
   http.GET();
   //Response from server
-  response = http.getString();
+  String response = http.getString();
   //Parse JSON, read error if any
   deserializeJson(doc, response);
+  
+  //Close connection  
+  http.end();
   
   JsonObject features_0 = doc["features"][0];
   JsonObject features_0_properties = features_0["properties"];
@@ -72,8 +72,6 @@ String Hub::getAdress(String lat, String lng) {
   
   //Print parsed value on Serial Monitor
  String features_0_properties_name = features_0_properties["name"]; 
-  //Close connection  
-  http.end();
   //Wait two seconds for next joke
   return features_0_properties_name;
 }
@@ -86,16 +84,13 @@ String Hub::getDirections(String start[2], String destination[2], String current
 // if coordinates is entered as the outpout then the way point number can be any number and it will return the longitude and latitude of theat number way point (steps must be zero or 1 t get long or lat) 
  
 String directionsRequest = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248195201672845469886f81046422ae9ef&start="+start[0]+","+ start[1]+"&end="+destination[0]+","+ destination[1];
- 
+ String finalOutput = "";
   http.begin(directionsRequest);
   http.GET();
   String Directionsresponse = http.getString();
-  http.begin(directionsRequest);
-  http.GET();
-  Directionsresponse = http.getString();
 
   deserializeJson(directionsDoc, Directionsresponse);
-  String finalOutput;
+  
   //int WantedStep = step; 
   //int WantedWaypoint = waypoint;    
   
@@ -147,7 +142,7 @@ String directionsRequest = "https://api.openrouteservice.org/v2/directions/drivi
   counter++;
 }
 for(int i = 0; i < numOfSteps;i++){
-  if (current_location.equals(names[i])){
+  if (current_location.indexOf(simpleDirection(names[i])) != -1){
     if(i != numOfSteps - 1){
     finalOutput = instructions[i] + " towards " + names[i+1]; 
     }
@@ -179,4 +174,21 @@ http.end();
 destinationCoordinates[0] = coordinates_geometry_coordinates_0;
 destinationCoordinates[1]  =  coordinates_geometry_coordinates_1;
 
+}
+
+String Hub::simpleDirection(String direction){
+  int index = 0;
+  for(int i = 0;i < direction.length();i++){
+      if(direction[i] == ','){
+        index = i;
+      }
+  }
+  String simple;
+
+  if(index != 0){
+    simple = direction.substring(0,index -1);
+  }else{
+    simple =direction;
+  }
+  return direction.substring(0,index -1);
 }

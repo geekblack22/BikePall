@@ -1,9 +1,6 @@
 #include <Arduino.h>
 #include "Audio.h"
-#include <FS.h>
-#include <SPIFFS.h>
-#include <SD_MMC.h>
-#include <FFat.h>
+
 // Media pins
 
 

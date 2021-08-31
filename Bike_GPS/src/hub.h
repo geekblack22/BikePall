@@ -23,14 +23,16 @@ public:
     const char* password = "loverboy";
     String destinationCoordinates[2];
     void setup();
-    String getAdress(String lat, String ngg);
+    String getAdress(String lng, String lat);
     //String for storing server response
-    String response = "";
+    
     //JSON document
     //DynamicJsonDocument doc(2048);
   // String getPoints(int point); //input the step number (indexing from zero) that you want in the steps 
    String getDirections (String start[2], String destination[2], String current_location); 
    void getCoordinates(String location);
+private:
+   String simpleDirection(String direction);
    
    
 
