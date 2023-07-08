@@ -41,12 +41,7 @@ enum PLAY {FIRST,SECOND,LAST}play;
 boolean done = false;
 void setup() {
   Serial.begin(115200);
-  /*allowed.setup();
-  while(!allowed.hasAccess){
-    allowed.authorized();
-  }
-   Serial.println("Access Granted");
-*/
+
  
 prox_sensor.setup();
 hub.setup();
