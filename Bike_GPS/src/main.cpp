@@ -7,7 +7,6 @@
 #include "Timer.h"
 #include "RFID.h"
 #include "Voice.h"
-#include "Talk.h"
 #include "Audio.h"
 #include "Audio_speech.h"
 // Digital I/O used
