@@ -34,7 +34,7 @@ Hub hub;
 bool flag = false; 
 ////Talk bikey;
 char data[100];
-char auth[] = " d8JVu9muQYonDxIKe1tPNPlUa_BDrhz5";
+char auth[] = " #";
 int count = 0;
 int ledLeftPin = 10; //change values when connected to board
 int ledRightPin = 12; //"
