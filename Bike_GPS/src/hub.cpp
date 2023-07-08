@@ -36,22 +36,8 @@ void Hub::setup() {
 
 String Hub::getAdress(String lng, String lat) { 
  
-   String request = "https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf6248195201672845469886f81046422ae9ef&point.lon=" +lng+"&point."+"lat="+lat + "&size=0";
- /*Serial.println("start sending events.")
-  if (hasIoTHub)
-  {
-   
-    if (Esp32MQTTClient_SendEvent(buff))
-    {
-      Serial.println("Sending data succeed");
-    }
-    else
-    {
-      Serial.println("Failure...");
-    }
-    delay(5000);
-  }*/
- 
+   String request = "https://api.openrouteservice.org/geocode/reverse?api_key=#&point.lon=" +lng+"&point."+"lat="+lat + "&size=0";
+
  
   //Parse JSON, read error if any
   //Wait two seconds for next joke
@@ -108,25 +94,7 @@ String directionsRequest = "https://api.openrouteservice.org/v2/directions/drivi
   String instructions[numOfSteps];
   int counter = 0;
   
-  // if (output == 2 ){ //2 is name
-  // //orignal line : const char* features_0_properties_segments_0_steps_0_name = features_0_properties_segments_0_steps_0["name"];
-  //  finalOutput = features_0_properties_segments_0_steps["name"][step]; // will output name, destination  
-  //  }
-  //  if(output == 1 ){ //1 is instruction 
-  //  //orignal line : const char* features_0_properties_segments_0_steps_0_instruction = features_0_properties_segments_0_steps_0["instruction"];
-  //   finalOutput = features_0_properties_segments_0_steps["instruction"][step];
-  //  }
-  // //for way points in a step a 0 returns start way point, 1 returns end way point
-  //  if (output == 3 && step <= 1 ){ // 3 is waypoint 
-  //  //orignal line : int features_0_properties_segments_0_steps_0_way_points_0 = features_0_properties_segments_0_steps_0["way_points"][0]; OR [1]
-  //     finalOutput = features_0_properties_segments_0_steps["way_points"][step]; //step value should only be 0 or 1 
-  //  }
-  //  if (output == 4 && step <= 1){ //4 is coordinates 
-  //    //returns coordinated of all the way points( may want to store as a global array)
-  //    JsonArray features_0_geometry_coordinates = features_0["geometry"]["coordinates"];
-  // //retunrs the longitude (0) and latitude (1) for a specific way point (0 and 1 are set by which step number is entered)
-  //    finalOutput = features_0_geometry_coordinates[waypoint][step];
-  //  }
+ 
   http.end();
   for (JsonObject elem : features_0_properties_segments_0["steps"].as<JsonArray>()) {
 
