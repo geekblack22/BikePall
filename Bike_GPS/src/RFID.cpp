@@ -29,7 +29,7 @@ void RFID:: authorized(){
   Serial.println();
   Serial.print("Message : ");
   content.toUpperCase();
-  if ((content.substring(1) == "CA D1 3B 16")||(content.substring(1) == "DB 9A 1A 1C")) //change here the UID of the card/cards that you want to give access
+  if ((content.substring(1) == "CA D1 3B 16")||(content.substring(1) == "#")) //change here the UID of the card/cards that you want to give access
   {
     Serial.println("Authorized access");
     hasAccess = true;
